@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
+using static Graphicdll.GraphicProcesing;
 
 namespace GraphicBasicWindows
 {
@@ -22,6 +25,12 @@ namespace GraphicBasicWindows
             InitializeComponent();
             Picture = picture;
             Source = source;
+            Copy = new Bitmap(source);
+            picture.Image = Copy;
+            lockedSource = Source.LockBits(new Rectangle(0, 0, Copy.Width, Copy.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
+            long avgt = 0;
+            Graphicdll.GraphicProcesing.ComputeAvg(Copy, lockedSource, ref avgt);
+            this.Avg = avgt;
             MinStaturation = minStaturation;
             GapSaturation = (maxSaturation - minStaturation) / staturTrack.Maximum;
             MinExpo = minExpo;
@@ -30,15 +39,17 @@ namespace GraphicBasicWindows
             GapContrast = (maxContrast - minContrast) / contrastTrac.Maximum;
             staturTrack_ValueChanged(this, EventArgs.Empty);
         }
-
+        BitmapData lockedSource;
         public PictureBox Picture { get; }
         public Bitmap Source { get; }
+        public Bitmap Copy { get; }
         public float MinStaturation { get; }
         public float GapSaturation { get; }
         public float MinExpo { get; }
         public float GapExpo { get; }
         public float MinContrast { get; }
         public float GapContrast { get; }
+        public long Avg { get; set; }
 
         private void staturTrack_DataContextChanged(object sender, EventArgs e)
         {
@@ -50,27 +61,31 @@ namespace GraphicBasicWindows
             float saturation = staturTrack.Value * GapSaturation + MinStaturation;
             float exposytion = expotrack.Value * GapExpo + MinExpo;
             float contrast = contrastTrac.Value * GapContrast + MinContrast;
-            Bitmap editedImage = await Task<Bitmap>.Factory.StartNew(() =>
-            {
-                Bitmap editedImage = new Bitmap(threadLocalBitmap.Value);
-                Graphicdll.GraphicProcesing.BasicEditing4Parameter(editedImage, exposytion, saturation, contrast);
-
-                last?.Dispose();
-                last = editedImage;
-                return editedImage;
-            });
-            try
-            {
-                textBox1.Text = saturation.ToString($"contrast : {contrast},saturation: {saturation} exposytion {exposytion} ");
-                Picture.Image = editedImage;
-            }
-            catch (Exception ex)
-            {
-                textBox1.Text = "err";
-            }
-            GC.Collect();
+            BasicEditing4Parameter(Copy, exposytion, saturation, contrast);
+            textBox1.Text = String.Format($"contrast : {contrast:0.00},saturation: {saturation:0.00} exposytion {exposytion:0.00} ");
+            Picture.Refresh();
         }
+        public unsafe void BasicEditing4Parameter(Bitmap Obraz, float exposytion, float saturaion, float contrast)
+        {
+            var rectangle = Obraz.Size;
+            BitmapData bp = Obraz.LockBits(new Rectangle(0, 0, Obraz.Width, Obraz.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
+            Enumerable.Range(0, rectangle.Height).AsParallel().ForAll(y =>
+            {
+
+                rgb* kr = (rgb*)((byte*)(bp.Scan0 + y * bp.Stride));
+                rgb* inKr = (rgb*)((byte*)(lockedSource.Scan0 + y * bp.Stride));
+                for (int x = 0; x < rectangle.Width; x++, kr++, inKr++)
+                {
+                    ComputePixel(exposytion, saturaion, contrast, this.Avg, inKr, kr);
+
+                }
+            });
+
+
+            Obraz.UnlockBits(bp);
+
+        }
         private void ContrastBrightnessSaturation_Load(object sender, EventArgs e)
         {
 
