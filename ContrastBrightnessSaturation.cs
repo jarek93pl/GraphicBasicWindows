@@ -20,7 +20,7 @@ namespace GraphicBasicWindows
         {
 
         }
-        public ContrastBrightnessSaturation(PictureBox picture, Bitmap source, float minStaturation, float maxSaturation, float minExpo, float maxExpo, float minContrast, float maxContrast)
+        public ContrastBrightnessSaturation(PictureBox picture, Bitmap source, float minStaturation, float maxSaturation, float minExpo, float maxExpo, float minContrast, float maxContrast, int minTemp, int maxTemp)
         {
             InitializeComponent();
             Picture = picture;
@@ -37,6 +37,7 @@ namespace GraphicBasicWindows
             GapExpo = (maxExpo - minExpo) / expotrack.Maximum;
             MinContrast = minContrast;
             GapContrast = (maxContrast - minContrast) / contrastTrac.Maximum;
+            MinTemperature = minTemp;
             staturTrack_ValueChanged(this, EventArgs.Empty);
         }
         BitmapData lockedSource;
@@ -49,6 +50,7 @@ namespace GraphicBasicWindows
         public float GapExpo { get; }
         public float MinContrast { get; }
         public float GapContrast { get; }
+        public int MinTemperature { get; }
         public long Avg { get; set; }
 
         private void staturTrack_DataContextChanged(object sender, EventArgs e)
@@ -61,11 +63,12 @@ namespace GraphicBasicWindows
             float saturation = staturTrack.Value * GapSaturation + MinStaturation;
             float exposytion = expotrack.Value * GapExpo + MinExpo;
             float contrast = contrastTrac.Value * GapContrast + MinContrast;
-            BasicEditing4Parameter(Copy, exposytion, saturation, contrast);
-            textBox1.Text = String.Format($"contrast : {contrast:0.00},saturation: {saturation:0.00} exposytion {exposytion:0.00} ");
+            int temperature = tempBar.Value + MinTemperature;
+            BasicEditing4Parameter(Copy, exposytion, saturation, contrast, temperature);
+            textBox1.Text = String.Format($"contrast : {contrast:0.00},saturation: {saturation:0.00} exposytion {exposytion:0.00} temperature {temperature:0.00} ");
             Picture.Refresh();
         }
-        public unsafe void BasicEditing4Parameter(Bitmap Obraz, float exposytion, float saturaion, float contrast)
+        public unsafe void BasicEditing4Parameter(Bitmap Obraz, float exposytion, float saturaion, float contrast, int temperature)
         {
             var rectangle = Obraz.Size;
             BitmapData bp = Obraz.LockBits(new Rectangle(0, 0, Obraz.Width, Obraz.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
@@ -77,7 +80,7 @@ namespace GraphicBasicWindows
                 rgb* inKr = (rgb*)((byte*)(lockedSource.Scan0 + y * bp.Stride));
                 for (int x = 0; x < rectangle.Width; x++, kr++, inKr++)
                 {
-                    ComputePixel(exposytion, saturaion, contrast, this.Avg, inKr, kr);
+                    ComputePixel(exposytion, saturaion, contrast, temperature, this.Avg, inKr, kr);
 
                 }
             });

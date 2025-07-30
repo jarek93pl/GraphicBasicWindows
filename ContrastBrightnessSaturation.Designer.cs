@@ -35,9 +35,12 @@
             label2 = new Label();
             label3 = new Label();
             textBox1 = new TextBox();
+            tempBar = new TrackBar();
+            label4 = new Label();
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tempBar).BeginInit();
             SuspendLayout();
             // 
             // contrastTrac
@@ -106,16 +109,38 @@
             // textBox1
             // 
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Location = new Point(12, 383);
+            textBox1.Location = new Point(12, 488);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(776, 31);
             textBox1.TabIndex = 6;
+            // 
+            // tempBar
+            // 
+            tempBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tempBar.Location = new Point(12, 399);
+            tempBar.Maximum = 200;
+            tempBar.Name = "tempBar";
+            tempBar.Size = new Size(776, 69);
+            tempBar.TabIndex = 7;
+            tempBar.Value = 100;
+            tempBar.ValueChanged += staturTrack_ValueChanged;
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(26, 359);
+            label4.Name = "label4";
+            label4.Size = new Size(123, 25);
+            label4.TabIndex = 8;
+            label4.Text = "temperature  :";
             // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(804, 469);
+            ClientSize = new Size(804, 551);
+            Controls.Add(label4);
+            Controls.Add(tempBar);
             Controls.Add(textBox1);
             Controls.Add(label3);
             Controls.Add(label2);
@@ -129,6 +154,7 @@
             ((System.ComponentModel.ISupportInitialize)contrastTrac).EndInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tempBar).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -142,5 +168,7 @@
         private Label label2;
         private Label label3;
         private TextBox textBox1;
+        private TrackBar tempBar;
+        private Label label4;
     }
 }
