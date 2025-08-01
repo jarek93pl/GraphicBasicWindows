@@ -37,10 +37,13 @@
             textBox1 = new TextBox();
             tempBar = new TrackBar();
             label4 = new Label();
+            label5 = new Label();
+            tintaBar = new TrackBar();
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tempBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)tintaBar).BeginInit();
             SuspendLayout();
             // 
             // contrastTrac
@@ -109,7 +112,7 @@
             // textBox1
             // 
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Location = new Point(12, 488);
+            textBox1.Location = new Point(12, 652);
             textBox1.Name = "textBox1";
             textBox1.Size = new Size(776, 31);
             textBox1.TabIndex = 6;
@@ -134,11 +137,34 @@
             label4.TabIndex = 8;
             label4.Text = "temperature  :";
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(26, 453);
+            label5.Name = "label5";
+            label5.Size = new Size(61, 25);
+            label5.TabIndex = 10;
+            label5.Text = "tinta  :";
+            label5.Click += label5_Click;
+            // 
+            // tintaBar
+            // 
+            tintaBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+            tintaBar.Location = new Point(12, 493);
+            tintaBar.Maximum = 200;
+            tintaBar.Name = "tintaBar";
+            tintaBar.Size = new Size(776, 69);
+            tintaBar.TabIndex = 9;
+            tintaBar.Value = 100;
+            tintaBar.ValueChanged += staturTrack_ValueChanged;
+            // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(804, 551);
+            ClientSize = new Size(804, 707);
+            Controls.Add(label5);
+            Controls.Add(tintaBar);
             Controls.Add(label4);
             Controls.Add(tempBar);
             Controls.Add(textBox1);
@@ -155,6 +181,7 @@
             ((System.ComponentModel.ISupportInitialize)expotrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)tempBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)tintaBar).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -170,5 +197,7 @@
         private TextBox textBox1;
         private TrackBar tempBar;
         private Label label4;
+        private Label label5;
+        private TrackBar tintaBar;
     }
 }

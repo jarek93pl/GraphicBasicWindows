@@ -46,6 +46,7 @@
             // 
             // checkBox1
             // 
+            checkBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             checkBox1.AutoSize = true;
             checkBox1.Location = new Point(12, 1062);
             checkBox1.Name = "checkBox1";
