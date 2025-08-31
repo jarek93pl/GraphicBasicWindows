@@ -101,5 +101,13 @@ namespace GraphicBasicWindows
         {
 
         }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (saveFileDialog1.ShowDialog() == DialogResult.OK)
+            {
+                Copy.Save(saveFileDialog1.FileName);
+            }
+        }
     }
 }

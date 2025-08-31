@@ -39,6 +39,8 @@
             label4 = new Label();
             label5 = new Label();
             tintaBar = new TrackBar();
+            button1 = new Button();
+            saveFileDialog1 = new SaveFileDialog();
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
@@ -158,11 +160,26 @@
             tintaBar.Value = 100;
             tintaBar.ValueChanged += staturTrack_ValueChanged;
             // 
+            // button1
+            // 
+            button1.Location = new Point(23, 579);
+            button1.Name = "button1";
+            button1.Size = new Size(112, 34);
+            button1.TabIndex = 11;
+            button1.Text = "save";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // saveFileDialog1
+            // 
+            saveFileDialog1.Filter = "bmp (*.bmp)|*.bmp|jpeg (*.jpeg)|*.jpeg|png (*.png)|*.png|tiff (*.tiff)|*.tiff";
+            // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(804, 707);
+            Controls.Add(button1);
             Controls.Add(label5);
             Controls.Add(tintaBar);
             Controls.Add(label4);
@@ -199,5 +216,7 @@
         private Label label4;
         private Label label5;
         private TrackBar tintaBar;
+        private Button button1;
+        private SaveFileDialog saveFileDialog1;
     }
 }
