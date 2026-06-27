@@ -30,7 +30,7 @@ namespace GraphicBasicWindows
             lockedSource = Source.LockBits(new Rectangle(0, 0, Copy.Width, Copy.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             long avgt = 0;
             Graphicdll.GraphicProcesing.ComputeAvg(Copy, lockedSource, ref avgt);
-            this.Avg = avgt;
+            this.AvgValue = avgt;
             MinStaturation = minStaturation;
             GapSaturation = (maxSaturation - minStaturation) / staturTrack.Maximum;
             MinExpo = minExpo;
@@ -53,8 +53,8 @@ namespace GraphicBasicWindows
         public float GapContrast { get; }
         public int MinTemperature { get; }
         public int MinTinta { get; }
-        public long Avg { get; set; }
 
+        public long AvgValue { get; set; }
         private void staturTrack_DataContextChanged(object sender, EventArgs e)
         {
 
@@ -83,7 +83,7 @@ namespace GraphicBasicWindows
                 rgb* inKr = (rgb*)((byte*)(lockedSource.Scan0 + y * bp.Stride));
                 for (int x = 0; x < rectangle.Width; x++, kr++, inKr++)
                 {
-                    ComputePixel(exposytion, saturaion, contrast, temperature, tinta, this.Avg, inKr, kr);
+                    ComputePixel(exposytion, saturaion, contrast, temperature, tinta, this.AvgValue, inKr, kr);
 
                 }
             });
