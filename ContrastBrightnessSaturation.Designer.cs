@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             contrastTrac = new TrackBar();
             expotrack = new TrackBar();
             staturTrack = new TrackBar();
@@ -41,6 +42,7 @@
             tintaBar = new TrackBar();
             button1 = new Button();
             saveFileDialog1 = new SaveFileDialog();
+            timerPerformance = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
@@ -174,6 +176,12 @@
             // 
             saveFileDialog1.Filter = "bmp (*.bmp)|*.bmp|jpeg (*.jpeg)|*.jpeg|png (*.png)|*.png|tiff (*.tiff)|*.tiff";
             // 
+            // timerPerformance
+            // 
+            timerPerformance.Enabled = true;
+            timerPerformance.Interval = 2000;
+            timerPerformance.Tick += timerPerformance_Tick;
+            // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -218,5 +226,6 @@
         private TrackBar tintaBar;
         private Button button1;
         private SaveFileDialog saveFileDialog1;
+        private System.Windows.Forms.Timer timerPerformance;
     }
 }

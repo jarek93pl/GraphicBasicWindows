@@ -1,3 +1,5 @@
+using Graphicdll;
+
 namespace GraphicBasicWindows
 {
     internal static class Program
@@ -45,10 +47,11 @@ namespace GraphicBasicWindows
                 }
 
             }
-            Bitmap bitmap = new Bitmap(path);
+            Bitmap bitmapOrginal = new Bitmap(path);
+            Bitmap bitmap = new Bitmap(bitmapOrginal, Resolution.ScaleResolution(bitmapOrginal.Size, 2073600));
             Application.Run(new Form1((x) =>
             {
-                new ContrastBrightnessSaturation(x, bitmap,
+                new ContrastBrightnessSaturation(x, bitmap, bitmapOrginal,
                 VD("minSaturation", 0),
                 VD("maxSaturation", 2),
                 VD("minExpo", 0),
