@@ -16,5 +16,19 @@ namespace Graphicdll
             numberPixel = Math.Sqrt(numberPixel);
             return new Size((int)(size.Width / numberPixel), (int)(size.Height / numberPixel));
         }
+        public static bool ScaleResolutionOnlyIfHigher(Size size, int outNumberPixel, out Size scal)
+        {
+            int numberOfPixel = size.Width * size.Height;
+            if (numberOfPixel > outNumberPixel)
+            {
+                scal = ScaleResolution(size, outNumberPixel);
+                return true;
+            }
+            else
+            {
+                scal = size;
+                return false;
+            }
+        }
     }
 }

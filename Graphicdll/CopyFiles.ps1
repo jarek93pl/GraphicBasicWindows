@@ -1,2 +1,2 @@
-﻿Copy-Item -Destination "E:\OneDrive\Pulpit\Apki\GraphicBasicWindows\Graphicdll" -Path "E:\OneDrive\Pulpit\fb activity\2026.07.26  grapic multhireding\grapicdlltest\GraphicProcesing.cs"
-Copy-Item -Destination "E:\OneDrive\Pulpit\Apki\GraphicBasicWindows\Graphicdll" -Path "E:\OneDrive\Pulpit\fb activity\2026.07.26  grapic multhireding\grapicdlltest\Resolution.cs"
+﻿Copy-Item -Destination "E:\OneDrive\Pulpit\Apki\GraphicBasicWindows\Graphicdll" -Path "E:\OneDrive\Pulpit\Apki\Graphicdll\GraphicProcesing.cs"
+Copy-Item -Destination "E:\OneDrive\Pulpit\Apki\GraphicBasicWindows\Graphicdll" -Path "E:\OneDrive\Pulpit\Apki\Graphicdll\Resolution.cs"
