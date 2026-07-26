@@ -31,7 +31,21 @@ namespace GraphicBasicWindows
                 }
                 return defaultValue;
             }
-            Bitmap bitmap = new Bitmap(arguments.TryGetValue("i", out string inputImage) ? inputImage : "img0.png");
+            string path = null;
+            if (arguments.TryGetValue("i", out string inputImage))
+            {
+                path = inputImage;
+            }
+            if (path != null)
+            {
+                OpenFileDialog dialog = new OpenFileDialog();
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    path = dialog.FileName;
+                }
+
+            }
+            Bitmap bitmap = new Bitmap(path);
             Application.Run(new Form1((x) =>
             {
                 new ContrastBrightnessSaturation(x, bitmap,
@@ -43,7 +57,7 @@ namespace GraphicBasicWindows
                 VD("maxContrast", 2),
                 (int)VD("minTemperature", -100),
                 (int)VD("maxTemperature", 100),
-                (int) VD("mintinta", -100),
+                (int)VD("mintinta", -100),
                 (int)VD("maxtinta", 100)
                 ).Show();
             }, new Bitmap(bitmap)));
