@@ -10,7 +10,7 @@ namespace GraphicBasicWindows
         [STAThread]
         static void Main(string[] args)
         {
-            string[] defaultArgs = { "-i", @"E:\OneDrive\Pulpit\fb activity\2025.07.21  MosaicWitch\tesEdit\img0.png", "-minSaturation", "0.0", "-maxSaturation", "2.0", "-minExpo", "0", "-maxExpo", "2.0", "-minContrast", "-2.0", "-maxContrast", "2.0", "-minTemperature", "-100", "-maxTemperature", "100", "-mintinta", "-100", "-maxtinta", "100" };
+            string[] defaultArgs = { "-i", null, "-minSaturation", "0.0", "-maxSaturation", "2.0", "-minExpo", "0", "-maxExpo", "2.0", "-minContrast", "-2.0", "-maxContrast", "2.0", "-minTemperature", "-100", "-maxTemperature", "100", "-mintinta", "-100", "-maxtinta", "100" };
             if (args.Length > 0)
             {
                 defaultArgs[1] = args[0];
@@ -38,7 +38,7 @@ namespace GraphicBasicWindows
             {
                 path = inputImage;
             }
-            if (path != null)
+            if (path == null)
             {
                 OpenFileDialog dialog = new OpenFileDialog();
                 if (dialog.ShowDialog() == DialogResult.OK)
