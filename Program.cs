@@ -48,7 +48,7 @@ namespace GraphicBasicWindows
 
             }
             Bitmap bitmapOrginal = new Bitmap(path);
-            Bitmap bitmap = new Bitmap(bitmapOrginal, Resolution.ScaleResolution(bitmapOrginal.Size, 2073600));
+            Bitmap bitmap = new Bitmap(bitmapOrginal, Resolution.ScaleResolution(bitmapOrginal.Size, 8294400));
             Application.Run(new Form1((x) =>
             {
                 new ContrastBrightnessSaturation(x, bitmap, bitmapOrginal,
