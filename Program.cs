@@ -47,23 +47,35 @@ namespace GraphicBasicWindows
                 }
 
             }
-            Bitmap bitmapOrginal = new Bitmap(path);
-            Bitmap bitmap = new Bitmap(bitmapOrginal, Resolution.ScaleResolution(bitmapOrginal.Size, 8294400));
-            Application.Run(new Form1((x) =>
+            if (path != null)
             {
-                new ContrastBrightnessSaturation(x, bitmap, bitmapOrginal,
-                VD("minSaturation", 0),
-                VD("maxSaturation", 2),
-                VD("minExpo", 0),
-                VD("maxExpo", 3),
-                VD("minContrast", 0),
-                VD("maxContrast", 2),
-                (int)VD("minTemperature", -100),
-                (int)VD("maxTemperature", 100),
-                (int)VD("mintinta", -100),
-                (int)VD("maxtinta", 100)
-                ).Show();
-            }, new Bitmap(bitmap)));
+                try
+                {
+
+                    Bitmap bitmapOrginal = new Bitmap(path);
+                    Bitmap bitmap = new Bitmap(bitmapOrginal, Resolution.ScaleResolution(bitmapOrginal.Size, 8294400));
+                    Application.Run(new Form1((x) =>
+                    {
+                        new ContrastBrightnessSaturation(x, bitmap, bitmapOrginal,
+                        VD("minSaturation", 0),
+                        VD("maxSaturation", 2),
+                        VD("minExpo", 0),
+                        VD("maxExpo", 3),
+                        VD("minContrast", 0),
+                        VD("maxContrast", 2),
+                        (int)VD("minTemperature", -100),
+                        (int)VD("maxTemperature", 100),
+                        (int)VD("mintinta", -100),
+                        (int)VD("maxtinta", 100)
+                        ).Show();
+                    }, new Bitmap(bitmap)));
+
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine("orpably too fast close app");
+                }
+            }
         }
     }
 }
