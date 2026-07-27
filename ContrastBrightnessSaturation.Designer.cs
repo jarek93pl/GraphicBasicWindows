@@ -43,6 +43,7 @@
             button1 = new Button();
             saveFileDialog1 = new SaveFileDialog();
             timerPerformance = new System.Windows.Forms.Timer(components);
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
@@ -182,11 +183,22 @@
             timerPerformance.Interval = 2000;
             timerPerformance.Tick += timerPerformance_Tick;
             // 
+            // button2
+            // 
+            button2.Location = new Point(141, 579);
+            button2.Name = "button2";
+            button2.Size = new Size(112, 34);
+            button2.TabIndex = 12;
+            button2.Text = "reset";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(804, 707);
+            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label5);
             Controls.Add(tintaBar);
@@ -227,5 +239,6 @@
         private Button button1;
         private SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Timer timerPerformance;
+        private Button button2;
     }
 }

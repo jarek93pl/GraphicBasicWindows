@@ -83,6 +83,18 @@ namespace GraphicBasicWindows
             temperature = tempBar.Value + MinTemperature;
             tinta = tintaBar.Value + MinTinta;
         }
+        void setParameters(float saturation, float exposytion, float contrast, int temperature, int tinta)
+        {
+            SetProperty((x) => staturTrack.Value = x, saturation, GapSaturation, MinStaturation);
+            SetProperty((x) => expotrack.Value = x, exposytion, GapExpo, MinExpo);
+            SetProperty((x) => contrastTrac.Value = x, contrast, GapContrast, MinContrast);
+            SetProperty((x) => tempBar.Value = x, temperature, 1, MinTemperature);
+            SetProperty((x) => tintaBar.Value = x, tinta, 1, MinTinta);
+        }
+        public void SetProperty(Action<int> propertyForm, float value, float gapValue, float MinValue)
+        {
+            propertyForm((int)((value - MinValue) / gapValue));
+        }
         public unsafe void BasicEditing4Parameter(Bitmap Obraz, float exposytion, float saturaion, float contrast, int temperature, int tinta)
         {
             Stopwatch stopwatch = Stopwatch.StartNew();
@@ -147,6 +159,11 @@ namespace GraphicBasicWindows
                 times.Clear();
 
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            setParameters(saturation: 1, exposytion: 1, contrast: 0, temperature: 0, tinta: 0);
         }
     }
 }
