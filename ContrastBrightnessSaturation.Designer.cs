@@ -69,7 +69,7 @@
             expotrack.Maximum = 200;
             expotrack.Name = "expotrack";
             expotrack.Size = new Size(776, 69);
-            expotrack.TabIndex = 1;
+            expotrack.TabIndex = 2;
             expotrack.Value = 100;
             expotrack.ValueChanged += staturTrack_ValueChanged;
             expotrack.DataContextChanged += staturTrack_DataContextChanged;
@@ -81,7 +81,7 @@
             staturTrack.Maximum = 200;
             staturTrack.Name = "staturTrack";
             staturTrack.Size = new Size(776, 69);
-            staturTrack.TabIndex = 2;
+            staturTrack.TabIndex = 3;
             staturTrack.Value = 100;
             staturTrack.ValueChanged += staturTrack_ValueChanged;
             staturTrack.DataContextChanged += staturTrack_DataContextChanged;
@@ -128,7 +128,7 @@
             tempBar.Maximum = 200;
             tempBar.Name = "tempBar";
             tempBar.Size = new Size(776, 69);
-            tempBar.TabIndex = 7;
+            tempBar.TabIndex = 4;
             tempBar.Value = 100;
             tempBar.ValueChanged += staturTrack_ValueChanged;
             // 
@@ -158,7 +158,7 @@
             tintaBar.Maximum = 200;
             tintaBar.Name = "tintaBar";
             tintaBar.Size = new Size(776, 69);
-            tintaBar.TabIndex = 9;
+            tintaBar.TabIndex = 5;
             tintaBar.Value = 100;
             tintaBar.ValueChanged += staturTrack_ValueChanged;
             // 
