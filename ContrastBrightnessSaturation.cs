@@ -18,9 +18,11 @@ namespace GraphicBasicWindows
 {
     public partial class ContrastBrightnessSaturation : Form
     {
+        public int numberTheard = Environment.ProcessorCount;
         public ContrastBrightnessSaturation()
         {
             timerPerformance.Start();
+            consoleReader.Start();
         }
         public ContrastBrightnessSaturation(PictureBox picture, Bitmap source, Bitmap sourceOrginalSize, float minStaturation, float maxSaturation, float minExpo, float maxExpo, float minContrast, float maxContrast, int minTemp, int maxTemp, int minTinta, int maxTinta)
         {
@@ -70,7 +72,11 @@ namespace GraphicBasicWindows
             int temperature, tinta;
             LoadParameters(out saturation, out exposytion, out contrast, out temperature, out tinta);
             BasicEditing4Parameter(Copy, exposytion, saturation, contrast, temperature, tinta);
-            textBox1.Text = String.Format($"contrast : {contrast:0.00},saturation: {saturation:0.00} exposytion {exposytion:0.00} temperature {temperature:0.00} tint{tinta:0.00} ");
+            textBox1.Lines = new string[]   {
+                String.Format($"contrast : {contrast:0.00},saturation: {saturation:0.00} exposytion {exposytion:0.00} temperature {temperature:0.00} tint{tinta:0.00} "),
+                String.Format($"setcolor;{saturation:0.00};{exposytion:0.00};{contrast:0.00};{temperature:0};{tinta:0} ")
+
+                    };
             Picture.Refresh();
 
 
@@ -101,7 +107,7 @@ namespace GraphicBasicWindows
             var rectangle = Obraz.Size;
             BitmapData bp = Obraz.LockBits(new Rectangle(0, 0, Obraz.Width, Obraz.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
 
-            Enumerable.Range(0, rectangle.Height).AsParallel().ForAll(y =>
+            Enumerable.Range(0, rectangle.Height).AsParallel().WithDegreeOfParallelism(numberTheard).ForAll(y =>
             {
 
                 rgb* kr = (rgb*)((byte*)(bp.Scan0 + y * bp.Stride));
@@ -164,6 +170,68 @@ namespace GraphicBasicWindows
         private void button2_Click(object sender, EventArgs e)
         {
             setParameters(saturation: 1, exposytion: 1, contrast: 0, temperature: 0, tinta: 0);
+        }
+        Task<string> pastReadConsoleTask;
+        private async void consoleReader_Tick(object sender, EventArgs e)
+        {
+            if (pastReadConsoleTask != null)
+            {
+                if (pastReadConsoleTask.IsCompleted)
+                {
+                    string[] strings = pastReadConsoleTask.Result.Split(";");
+                    if (strings.Length > 0)
+                    {
+                        switch (strings[0])
+                        {
+                            case "numberthread":
+                                if (strings.Length > 1)
+                                {
+                                    Console.WriteLine($"exec1");
+                                    SetNumberThread(new Span<string>(strings, 1, 1));
+                                }
+                                break;
+                            case "setcolor":
+                                if (strings.Length > 5)
+                                {
+                                    Console.WriteLine($"exec2");
+                                    SetColor(new Span<string>(strings, 1, 5));
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                    StartNewConsoleReadTask();
+                }
+            }
+            else
+            {
+                StartNewConsoleReadTask();
+            }
+        }
+
+        private void SetColor(Span<string> span)
+        {
+            try
+            {
+                setParameters(saturation: Convert.ToSingle(span[0]), exposytion: Convert.ToSingle(span[1]), contrast: Convert.ToSingle(span[2]), temperature: (int)Convert.ToSingle(span[3]), tinta: (int)Convert.ToSingle(span[4]));
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+        }
+
+        private void SetNumberThread(Span<string> span)
+        {
+            numberTheard = Convert.ToInt32(span[0]);
+        }
+
+        void StartNewConsoleReadTask()
+        {
+            pastReadConsoleTask = Task<string>.Run(() => Console.ReadLine());
         }
     }
 }

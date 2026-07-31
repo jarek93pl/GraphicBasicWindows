@@ -44,6 +44,7 @@
             saveFileDialog1 = new SaveFileDialog();
             timerPerformance = new System.Windows.Forms.Timer(components);
             button2 = new Button();
+            consoleReader = new System.Windows.Forms.Timer(components);
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
@@ -117,9 +118,10 @@
             // textBox1
             // 
             textBox1.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            textBox1.Location = new Point(12, 652);
+            textBox1.Location = new Point(12, 634);
+            textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(776, 31);
+            textBox1.Size = new Size(776, 61);
             textBox1.TabIndex = 6;
             // 
             // tempBar
@@ -193,6 +195,12 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // consoleReader
+            // 
+            consoleReader.Enabled = true;
+            consoleReader.Interval = 50;
+            consoleReader.Tick += consoleReader_Tick;
+            // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
@@ -240,5 +248,6 @@
         private SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Timer timerPerformance;
         private Button button2;
+        private System.Windows.Forms.Timer consoleReader;
     }
 }
