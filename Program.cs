@@ -1,4 +1,6 @@
 using Graphicdll;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace GraphicBasicWindows
 {
@@ -10,7 +12,9 @@ namespace GraphicBasicWindows
         [STAThread]
         static void Main(string[] args)
         {
-           
+            var culture = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
             Dictionary<string, string> arguments = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             for (int i = 0; i < args.Length; i++)
             {
