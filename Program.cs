@@ -10,13 +10,8 @@ namespace GraphicBasicWindows
         [STAThread]
         static void Main(string[] args)
         {
-            string[] defaultArgs = { "-i", null, "-minSaturation", "0.0", "-maxSaturation", "2.0", "-minExpo", "0", "-maxExpo", "2.0", "-minContrast", "-2.0", "-maxContrast", "2.0", "-minTemperature", "-100", "-maxTemperature", "100", "-mintinta", "-100", "-maxtinta", "100" };
-            if (args.Length > 0)
-            {
-                defaultArgs[1] = args[0];
-            }
+           
             Dictionary<string, string> arguments = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-            args = defaultArgs;
             for (int i = 0; i < args.Length; i++)
             {
                 if (args[i].StartsWith("-"))
@@ -67,15 +62,15 @@ namespace GraphicBasicWindows
                     {
                         new ContrastBrightnessSaturation(x, bitmap, bitmapOrginal,
                         VD("minSaturation", 0),
-                        VD("maxSaturation", 2),
+                        VD("maxSaturation", 3),
                         VD("minExpo", 0),
                         VD("maxExpo", 3),
-                        VD("minContrast", 0),
-                        VD("maxContrast", 2),
-                        (int)VD("minTemperature", -100),
-                        (int)VD("maxTemperature", 100),
-                        (int)VD("mintinta", -100),
-                        (int)VD("maxtinta", 100)
+                        VD("minContrast", -1),
+                        VD("maxContrast", 3),
+                        (int)VD("minTemperature", -256),
+                        (int)VD("maxTemperature", 256),
+                        (int)VD("mintinta", -256),
+                        (int)VD("maxtinta", 256)
                         ).Show();
                     }, new Bitmap(bitmap)));
 

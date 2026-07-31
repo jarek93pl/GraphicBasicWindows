@@ -128,11 +128,11 @@
             // 
             tempBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tempBar.Location = new Point(12, 399);
-            tempBar.Maximum = 200;
+            tempBar.Maximum = 256;
+            tempBar.Minimum = -256;
             tempBar.Name = "tempBar";
             tempBar.Size = new Size(776, 69);
             tempBar.TabIndex = 4;
-            tempBar.Value = 100;
             tempBar.ValueChanged += staturTrack_ValueChanged;
             // 
             // label4
@@ -158,11 +158,11 @@
             // 
             tintaBar.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             tintaBar.Location = new Point(12, 493);
-            tintaBar.Maximum = 200;
+            tintaBar.Maximum = 256;
+            tintaBar.Minimum = -256;
             tintaBar.Name = "tintaBar";
             tintaBar.Size = new Size(776, 69);
             tintaBar.TabIndex = 5;
-            tintaBar.Value = 100;
             tintaBar.ValueChanged += staturTrack_ValueChanged;
             // 
             // button1

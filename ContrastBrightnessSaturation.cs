@@ -42,9 +42,11 @@ namespace GraphicBasicWindows
             GapExpo = (maxExpo - minExpo) / expotrack.Maximum;
             MinContrast = minContrast;
             GapContrast = (maxContrast - minContrast) / contrastTrac.Maximum;
-            MinTemperature = minTemp;
-            MinTinta = minTinta;
-            staturTrack_ValueChanged(this, EventArgs.Empty);
+            tintaBar.Minimum = minTinta;
+            tintaBar.Maximum = maxTinta;
+            tempBar.Minimum = minTemp;
+            tempBar.Maximum = maxTemp;
+            ResetParameters();
         }
         BitmapData lockedSource;
         public PictureBox Picture { get; }
@@ -57,8 +59,6 @@ namespace GraphicBasicWindows
         public float GapExpo { get; }
         public float MinContrast { get; }
         public float GapContrast { get; }
-        public int MinTemperature { get; }
-        public int MinTinta { get; }
 
         public long AvgValue { get; set; }
         private void staturTrack_DataContextChanged(object sender, EventArgs e)
@@ -86,16 +86,16 @@ namespace GraphicBasicWindows
             saturation = staturTrack.Value * GapSaturation + MinStaturation;
             exposytion = expotrack.Value * GapExpo + MinExpo;
             contrast = contrastTrac.Value * GapContrast + MinContrast;
-            temperature = tempBar.Value + MinTemperature;
-            tinta = tintaBar.Value + MinTinta;
+            temperature = tempBar.Value;
+            tinta = tintaBar.Value ;
         }
         void setParameters(float saturation, float exposytion, float contrast, int temperature, int tinta)
         {
             SetProperty((x) => staturTrack.Value = x, saturation, GapSaturation, MinStaturation);
             SetProperty((x) => expotrack.Value = x, exposytion, GapExpo, MinExpo);
             SetProperty((x) => contrastTrac.Value = x, contrast, GapContrast, MinContrast);
-            SetProperty((x) => tempBar.Value = x, temperature, 1, MinTemperature);
-            SetProperty((x) => tintaBar.Value = x, tinta, 1, MinTinta);
+            SetProperty((x) => tempBar.Value = x, temperature, 1,0);
+            SetProperty((x) => tintaBar.Value = x, tinta, 1, 0);
         }
         public void SetProperty(Action<int> propertyForm, float value, float gapValue, float MinValue)
         {
@@ -169,8 +169,14 @@ namespace GraphicBasicWindows
 
         private void button2_Click(object sender, EventArgs e)
         {
+            ResetParameters();
+        }
+
+        private void ResetParameters()
+        {
             setParameters(saturation: 1, exposytion: 1, contrast: 0, temperature: 0, tinta: 0);
         }
+
         Task<string> pastReadConsoleTask;
         private async void consoleReader_Tick(object sender, EventArgs e)
         {
