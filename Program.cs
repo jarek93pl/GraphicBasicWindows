@@ -52,7 +52,7 @@ namespace GraphicBasicWindows
                 {
                     Bitmap bitmap;
                     Bitmap bitmapOrginal = new Bitmap(path);
-                    if (Graphicdll.Resolution.ScaleResolutionOnlyIfHigher(bitmapOrginal.Size, 8294400, out var size))
+                    if (Resolution.ScaleResolutionOnlyIfHigher(bitmapOrginal.Size, 82944000, out var size))
                     {
                         Console.WriteLine($"scaled from {bitmapOrginal.Size} to {size}");
                         bitmap = new Bitmap(bitmapOrginal, size);
