@@ -10,6 +10,7 @@ using System.Drawing.Imaging;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -159,31 +160,40 @@ namespace GraphicBasicWindows
                         SC1G = Vector.Narrow(SFC1, SFC2);
                         SC2G = Vector.Narrow(SFC3, SFC4);
                     }
-                    Vector<byte> colorR;
+                    Vector<byte> V0;
                     {
                         var span = new ReadOnlySpan<byte>(imageR, i + startPoint, sizeVector);
-                        colorR = LoadColor(brightMultipeV, saturaionV, vR, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
+                        V0 = LoadColor(brightMultipeV, saturaionV, vR, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
                     }
 
-                    Vector<byte> colorG;
+                    Vector<byte> V1;
                     {
                         var span = new ReadOnlySpan<byte>(imageG, i + startPoint, sizeVector);
-                        colorG = LoadColor(brightMultipeV, saturaionV, vG, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
+                        V1 = LoadColor(brightMultipeV, saturaionV, vG, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
                     }
-                    Vector<byte> colorB;
+                    Vector<byte> V2;
                     {
                         var span = new ReadOnlySpan<byte>(imageB, i + startPoint, sizeVector);
-                        colorB = LoadColor(brightMultipeV, saturaionV, vB, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
+                        V2 = LoadColor(brightMultipeV, saturaionV, vB, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
                     }
-                    for (int indexSave = 0; indexSave < sizeVector; indexSave++, kr++)
+
+                    byte* data = stackalloc byte[3 * sizeVector];
+                    byte* dataC = data;
+                    for (int indexSave = 0; indexSave < sizeVector; indexSave++, dataC += 3)
                     {
-                        rgb color;
-                        color.r = colorR[indexSave];
-                        color.g = colorG[indexSave];
-                        color.b = colorB[indexSave];
-                        *kr = color;
+                        dataC[0] = V0[indexSave];
+                        dataC[1] = V1[indexSave];
+                        dataC[2] = V2[indexSave];
 
                     }
+                    byte* point = (byte*)(nint)kr;
+                    V0 = new Vector<byte>(new ReadOnlySpan<byte>(data, sizeVector));
+                    V1 = new Vector<byte>(new ReadOnlySpan<byte>(data + sizeVector, sizeVector));
+                    V2 = new Vector<byte>(new ReadOnlySpan<byte>(data + (sizeVector << 1), sizeVector));
+                    Vector.StoreUnsafe(V0, ref point[0]);
+                    Vector.StoreUnsafe(V1, ref point[sizeVector]);
+                    Vector.StoreUnsafe(V2, ref point[sizeVector << 1]);
+                    kr += sizeVector;
                 }
 
                 rgb* inKr = (rgb*)((byte*)(lockedSource.Scan0 + y * bp.Stride));
