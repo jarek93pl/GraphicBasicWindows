@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
@@ -128,11 +129,22 @@ namespace GraphicBasicWindows
         {
             int brightMutilper = 1;
             int bitSiwthNumberForExposytion;
-            CalcuateBright(exposytion, out brightMutilper, out bitSiwthNumberForExposytion);
+
+            int contrastMutilper = 1;
+            int contrastNumberForcontrast;
+
+            int saturaionMutilper = 1;
+            int saturaionNumberForsaturaion;
+
+            bool contrastisPostive = contrast > 0;
+            float ContrastforVector = Math.Abs(contrast);
+            CalcuateProperty(exposytion, out brightMutilper, out bitSiwthNumberForExposytion);
+            CalcuateProperty(ContrastforVector, out contrastMutilper, out contrastNumberForcontrast);
+            CalcuateProperty(saturaion, out saturaionMutilper, out saturaionNumberForsaturaion);
             Vector<short> brightMultipeV = new Vector<short>((short)brightMutilper);
             Vector<short> avgImageV = new Vector<short>((short)AvgValue);
-            Vector<float> contrastV = new Vector<float>(contrast);
-            Vector<float> saturaionV = new Vector<float>(saturaion);
+            Vector<short> contrastV = new Vector<short>((short)contrastMutilper);
+            Vector<short> saturaionV = new Vector<short>((short)saturaionMutilper);
             Vector<short> vR = new Vector<short>((short)(-temperature - tinta));
             Vector<short> vG = new Vector<short>((short)(tinta * 2));
             Vector<short> vB = new Vector<short>((short)(temperature - tinta));
@@ -163,37 +175,38 @@ namespace GraphicBasicWindows
                         APUS1G = APS1; APUS2G = APS2;
                         APS1 -= avgImageV;
                         APS2 -= avgImageV;
-                        Vector<int> SFC1, SFC2, SFC3, SFC4;
-                        Vector.Widen(APS1, out SFC1, out SFC2);
-                        Vector.Widen(APS2, out SFC3, out SFC4);
-                        Vector<float> SFC1F = Vector.ConvertToSingle(SFC1), SFC2F = Vector.ConvertToSingle(SFC2);
-                        Vector<float> SFC3F = Vector.ConvertToSingle(SFC3), SFC4F = Vector.ConvertToSingle(SFC4);
-                        SFC1F *= contrastV;
-                        SFC2F *= contrastV;
-                        SFC3F *= contrastV;
-                        SFC4F *= contrastV;
-                        SFC1 = Vector.ConvertToInt32(SFC1F);
-                        SFC2 = Vector.ConvertToInt32(SFC2F);
-                        SFC3 = Vector.ConvertToInt32(SFC3F);
-                        SFC4 = Vector.ConvertToInt32(SFC4F);
-                        SC1G = Vector.Narrow(SFC1, SFC2);
-                        SC2G = Vector.Narrow(SFC3, SFC4);
+
+                        Vector<short> rVC1 = Vector.Abs(APS1), rVC2 = Vector.Abs(APS2);
+                        rVC1 = Vector.Multiply<short>(rVC1, contrastV);
+                        rVC2 = Vector.Multiply<short>(rVC2, contrastV);
+                        rVC1 = Vector.ShiftRightArithmetic(rVC1, contrastNumberForcontrast);
+                        rVC2 = Vector.ShiftRightArithmetic(rVC2, contrastNumberForcontrast);
+                        SC1G = -rVC1;
+                        SC2G = -rVC2;
+                        SC1G = Vector.ConditionalSelect(Vector.GreaterThanOrEqual(APS1, Vector<short>.Zero), rVC1, SC1G);
+                        SC2G = Vector.ConditionalSelect(Vector.GreaterThanOrEqual(APS2, Vector<short>.Zero), rVC2, SC2G);
+
+                        if (!contrastisPostive)
+                        {
+                            SC1G = -SC1G;
+                            SC2G = -SC2G;
+                        }
                     }
                     Vector<byte> V0;
                     {
                         var span = new ReadOnlySpan<byte>(imageR, i + startPoint, sizeVector);
-                        V0 = LoadColor(brightMultipeV, saturaionV, vR, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
+                        V0 = LoadColor(brightMultipeV, saturaionV, saturaionNumberForsaturaion, vR, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
                     }
 
                     Vector<byte> V1;
                     {
                         var span = new ReadOnlySpan<byte>(imageG, i + startPoint, sizeVector);
-                        V1 = LoadColor(brightMultipeV, saturaionV, vG, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
+                        V1 = LoadColor(brightMultipeV, saturaionV, saturaionNumberForsaturaion, vG, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
                     }
                     Vector<byte> V2;
                     {
                         var span = new ReadOnlySpan<byte>(imageB, i + startPoint, sizeVector);
-                        V2 = LoadColor(brightMultipeV, saturaionV, vB, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
+                        V2 = LoadColor(brightMultipeV, saturaionV, saturaionNumberForsaturaion, vB, SC1G, SC2G, APUS1G, APUS2G, span, bitSiwthNumberForExposytion);
                     }
 
                     byte* data = stackalloc byte[3 * sizeVector];
@@ -230,7 +243,7 @@ namespace GraphicBasicWindows
 
         }
 
-        private static void CalcuateBright(float exposytion, out int brightMutilper, out int bitSiwthNumberForExposytion)
+        private static void CalcuateProperty(float exposytion, out int brightMutilper, out int bitSiwthNumberForExposytion)
         {
             bitSiwthNumberForExposytion = 7;
             if (exposytion > 2)
@@ -247,7 +260,7 @@ namespace GraphicBasicWindows
 
         }
 
-        private static Vector<byte> LoadColor(Vector<short> brightMultipe, Vector<float> saturaionV, Vector<short> vR, Vector<short> SC1G, Vector<short> SC2G, Vector<short> APUS1G, Vector<short> APUS2G, ReadOnlySpan<byte> spanIn, int bitSiwthNumberForExposytion)
+        private static Vector<byte> LoadColor(Vector<short> brightMultipe, Vector<short> saturaionV, int saturationBitmove, Vector<short> vR, Vector<short> SC1G, Vector<short> SC2G, Vector<short> APUS1G, Vector<short> APUS2G, ReadOnlySpan<byte> spanIn, int bitSiwthNumberForExposytion)
         {
             Vector<short> vMax255 = new Vector<short>(255);
             Vector<short> rVS1, rVS2;
@@ -267,25 +280,18 @@ namespace GraphicBasicWindows
                 Vector<short> rVSC1, rVSC2;
                 rVSC1 = rVS1;
                 rVSC2 = rVS2;
-                Vector<float> rVSF1, rVSF2, rVSF3, rVSF4;
-                Vector<int> rVIU1, rVIU2, rVIU3, rVIU4;
-                Vector.Widen(rVSC1, out rVIU1, out rVIU2);
-                Vector.Widen(rVSC2, out rVIU3, out rVIU4);
-                rVSF1 = Vector.ConvertToSingle(rVIU1);
-                rVSF2 = Vector.ConvertToSingle(rVIU2);
-                rVSF3 = Vector.ConvertToSingle(rVIU3);
-                rVSF4 = Vector.ConvertToSingle(rVIU4);
-                rVSF1 *= saturaionV;
-                rVSF2 *= saturaionV;
-                rVSF3 *= saturaionV;
-                rVSF4 *= saturaionV;
-                rVIU1 = Vector.ConvertToInt32(rVSF1);
-                rVIU2 = Vector.ConvertToInt32(rVSF2);
-                rVIU3 = Vector.ConvertToInt32(rVSF3);
-                rVIU4 = Vector.ConvertToInt32(rVSF4);
 
-                rVSC1 = Vector.Narrow(rVIU1, rVIU2);
-                rVSC2 = Vector.Narrow(rVIU3, rVIU4);
+                Vector<short> sVC1 = Vector.Abs(rVSC1), sVC2 = Vector.Abs(rVSC2);
+                sVC1 = Vector.Multiply<short>(sVC1, saturaionV);
+                sVC2 = Vector.Multiply<short>(sVC2, saturaionV);
+                sVC1 = Vector.ShiftRightArithmetic(sVC1, saturationBitmove);
+                sVC2 = Vector.ShiftRightArithmetic(sVC2, saturationBitmove);
+                Vector<short> NsVC1 = -sVC1;
+                Vector<short> NsVC2 = -sVC2;
+                rVSC1 = Vector.ConditionalSelect(Vector.GreaterThanOrEqual(rVSC1, Vector<short>.Zero), sVC1, NsVC1);
+                rVSC2 = Vector.ConditionalSelect(Vector.GreaterThanOrEqual(rVSC2, Vector<short>.Zero), sVC2, NsVC2);
+
+
 
                 rVS1 = Vector.Negate(rVS1);
                 rVS2 = Vector.Negate(rVS2);
@@ -299,10 +305,8 @@ namespace GraphicBasicWindows
             rVS2 += vR;
             rVS1 += SC1G;
             rVS2 += SC2G;
-            rVS1 = Vector.Max(rVS1, Vector<short>.Zero);
-            rVS2 = Vector.Max(rVS2, Vector<short>.Zero);
-            rVS1 = Vector.Min(rVS1, vMax255);
-            rVS2 = Vector.Min(rVS2, vMax255);
+            rVS1 = Vector.Clamp(rVS1, Vector<short>.Zero, vMax255);
+            rVS2 = Vector.Clamp(rVS2, Vector<short>.Zero, vMax255);
             rVS1 = Vector.Multiply<short>(rVS1, brightMultipe);
             rVS2 = Vector.Multiply<short>(rVS2, brightMultipe);
             rVS1 = Vector.ShiftRightArithmetic(rVS1, bitSiwthNumberForExposytion);

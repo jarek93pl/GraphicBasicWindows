@@ -43,7 +43,7 @@ namespace GraphicBasicWindows
                     }
                     else
                     {
-                        bitmap = bitmapOrginal;
+                        bitmap = (Bitmap)bitmapOrginal.Clone();
                     }
                     Application.Run(new Form1((x) =>
                     {
