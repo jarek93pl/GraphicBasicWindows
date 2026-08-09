@@ -28,14 +28,15 @@ namespace GraphicBasicWindows
             consoleReader.Start();
         }
         byte[] imageR, imageG, imageB, imageAvg;
-        public ContrastBrightnessSaturation(PictureBox picture, Bitmap source, Bitmap sourceOrginalSize, float minStaturation, float maxSaturation, float minExpo, float maxExpo, float minContrast, float maxContrast, int minTemp, int maxTemp, int minTinta, int maxTinta)
+        public ContrastBrightnessSaturation(Form1 picture, Bitmap source, Bitmap sourceOrginalSize, float minStaturation, float maxSaturation, float minExpo, float maxExpo, float minContrast, float maxContrast, int minTemp, int maxTemp, int minTinta, int maxTinta)
         {
+            Form1 = picture;
             InitializeComponent();
-            Picture = picture;
+            Picture = picture.MainImage;
             Source = source;
             Copy = new Bitmap(source);
             SourceorginalSize = sourceOrginalSize;
-            picture.Image = Copy;
+            picture.MainImage.Image = Copy;
             lockedSource = Source.LockBits(new Rectangle(0, 0, Copy.Width, Copy.Height), System.Drawing.Imaging.ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
             long avgt = 0;
             GraphicProcesingForConstImage.ComputeAvg(Copy, lockedSource, out imageR, out imageG, out imageB, out imageAvg, ref avgt);
@@ -51,8 +52,26 @@ namespace GraphicBasicWindows
             tempBar.Minimum = minTemp;
             tempBar.Maximum = maxTemp;
             ResetParameters();
+            ComputeTrackBarParameter();
         }
+        private void ComputeTrackBarParameter()
+        {
+            const int MaxSizeOneDim = 20_000;
+            factorToMultiple = 1f / ImageScaler.Value;
+            int trackMax = ImageScaler.Maximum;
+            float MaxScaler = trackMax * factorToMultiple;
+            float maxWidth = MaxScaler * Copy.Width;
+            float maxHeight = MaxScaler * Copy.Height;
+            float max = Math.Max(maxWidth, maxHeight);
+            if (max > MaxSizeOneDim)
+            {
+                factorToMultiple *= MaxSizeOneDim / max;
+                ImageScaler.Value = (int)(1f / factorToMultiple);
+            }
+        }
+
         BitmapData lockedSource;
+        public Form1 Form1 { get; set; }
         public PictureBox Picture { get; }
         public Bitmap Source { get; }
         public Bitmap SourceorginalSize { get; }
@@ -225,13 +244,11 @@ namespace GraphicBasicWindows
                 bitSiwthNumberForExposytion = 6;
             }
             brightMutilper = (int)(128 * exposytion);
-            brightMutilper--;
 
         }
 
         private static Vector<byte> LoadColor(Vector<short> brightMultipe, Vector<float> saturaionV, Vector<short> vR, Vector<short> SC1G, Vector<short> SC2G, Vector<short> APUS1G, Vector<short> APUS2G, ReadOnlySpan<byte> spanIn, int bitSiwthNumberForExposytion)
         {
-            Vector<short> brightSift = new Vector<short>((short)8);
             Vector<short> vMax255 = new Vector<short>(255);
             Vector<short> rVS1, rVS2;
             Vector<short> rVS1C, rVS2C;
@@ -415,6 +432,17 @@ namespace GraphicBasicWindows
         void StartNewConsoleReadTask()
         {
             pastReadConsoleTask = Task<string>.Run(() => Console.ReadLine());
+        }
+
+        float factorToMultiple;
+        private void trackBar1_ValueChanged(object sender, EventArgs e)
+        {
+            Form1.ImagesSize = new Size((int)(factorToMultiple * (Copy.Width * ImageScaler.Value)), (int)(factorToMultiple * (Copy.Height * ImageScaler.Value)));
+        }
+
+        private void trackBar1_Scroll(object sender, EventArgs e)
+        {
+
         }
     }
 }

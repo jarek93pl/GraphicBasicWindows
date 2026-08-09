@@ -45,11 +45,13 @@
             timerPerformance = new System.Windows.Forms.Timer(components);
             button2 = new Button();
             consoleReader = new System.Windows.Forms.Timer(components);
+            ImageScaler = new TrackBar();
             ((System.ComponentModel.ISupportInitialize)contrastTrac).BeginInit();
             ((System.ComponentModel.ISupportInitialize)expotrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)staturTrack).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tempBar).BeginInit();
             ((System.ComponentModel.ISupportInitialize)tintaBar).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)ImageScaler).BeginInit();
             SuspendLayout();
             // 
             // contrastTrac
@@ -58,7 +60,7 @@
             contrastTrac.Location = new Point(12, 81);
             contrastTrac.Maximum = 200;
             contrastTrac.Name = "contrastTrac";
-            contrastTrac.Size = new Size(776, 69);
+            contrastTrac.Size = new Size(804, 69);
             contrastTrac.TabIndex = 0;
             contrastTrac.Value = 100;
             contrastTrac.ValueChanged += staturTrack_ValueChanged;
@@ -70,7 +72,7 @@
             expotrack.Location = new Point(12, 191);
             expotrack.Maximum = 200;
             expotrack.Name = "expotrack";
-            expotrack.Size = new Size(776, 69);
+            expotrack.Size = new Size(804, 69);
             expotrack.TabIndex = 2;
             expotrack.Value = 100;
             expotrack.ValueChanged += staturTrack_ValueChanged;
@@ -82,7 +84,7 @@
             staturTrack.Location = new Point(12, 298);
             staturTrack.Maximum = 200;
             staturTrack.Name = "staturTrack";
-            staturTrack.Size = new Size(776, 69);
+            staturTrack.Size = new Size(804, 69);
             staturTrack.TabIndex = 3;
             staturTrack.Value = 100;
             staturTrack.ValueChanged += staturTrack_ValueChanged;
@@ -121,7 +123,7 @@
             textBox1.Location = new Point(12, 634);
             textBox1.Multiline = true;
             textBox1.Name = "textBox1";
-            textBox1.Size = new Size(776, 61);
+            textBox1.Size = new Size(917, 61);
             textBox1.TabIndex = 6;
             // 
             // tempBar
@@ -131,7 +133,7 @@
             tempBar.Maximum = 256;
             tempBar.Minimum = -256;
             tempBar.Name = "tempBar";
-            tempBar.Size = new Size(776, 69);
+            tempBar.Size = new Size(804, 69);
             tempBar.TabIndex = 4;
             tempBar.ValueChanged += staturTrack_ValueChanged;
             // 
@@ -161,7 +163,7 @@
             tintaBar.Maximum = 256;
             tintaBar.Minimum = -256;
             tintaBar.Name = "tintaBar";
-            tintaBar.Size = new Size(776, 69);
+            tintaBar.Size = new Size(804, 69);
             tintaBar.TabIndex = 5;
             tintaBar.ValueChanged += staturTrack_ValueChanged;
             // 
@@ -201,11 +203,26 @@
             consoleReader.Interval = 50;
             consoleReader.Tick += consoleReader_Tick;
             // 
+            // trackBar1
+            // 
+            ImageScaler.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
+            ImageScaler.Location = new Point(832, 31);
+            ImageScaler.Maximum = 35;
+            ImageScaler.Minimum = 1;
+            ImageScaler.Name = "trackBar1";
+            ImageScaler.Orientation = Orientation.Vertical;
+            ImageScaler.Size = new Size(69, 278);
+            ImageScaler.TabIndex = 13;
+            ImageScaler.Value = 7;
+            ImageScaler.Scroll += trackBar1_Scroll;
+            ImageScaler.ValueChanged += trackBar1_ValueChanged;
+            // 
             // ContrastBrightnessSaturation
             // 
             AutoScaleDimensions = new SizeF(10F, 25F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(804, 707);
+            ClientSize = new Size(945, 707);
+            Controls.Add(ImageScaler);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label5);
@@ -227,6 +244,7 @@
             ((System.ComponentModel.ISupportInitialize)staturTrack).EndInit();
             ((System.ComponentModel.ISupportInitialize)tempBar).EndInit();
             ((System.ComponentModel.ISupportInitialize)tintaBar).EndInit();
+            ((System.ComponentModel.ISupportInitialize)ImageScaler).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -249,5 +267,6 @@
         private System.Windows.Forms.Timer timerPerformance;
         private Button button2;
         private System.Windows.Forms.Timer consoleReader;
+        private TrackBar ImageScaler;
     }
 }
