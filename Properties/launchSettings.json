@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "GraphicBasicWindows": {
+      "commandName": "Project"
+    },
+    "Eco mode": {
+      "commandName": "Project",
+      "commandLineArgs": "-eco true"
+    }
+  }
+}

@@ -15,7 +15,7 @@ namespace GraphicBasicWindows
             {
                 float pastX = pictureBox1.Size.Width;
                 float scaler = pastX / value.Width;
-                
+
                 pictureBox1.Size = value;
                 pictureBox2.Size = value;
                 panel1.VerticalScroll.Value = (int)(panel1.VerticalScroll.Value / scaler);
