@@ -7,6 +7,7 @@ namespace GraphicBasicWindows
         public Form1()
         {
             InitializeComponent();
+            this.DoubleBuffered = true;
         }
         public Size ImagesSize
         {
