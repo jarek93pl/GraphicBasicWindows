@@ -45,6 +45,11 @@ namespace GraphicBasicWindows
                     {
                         bitmap = (Bitmap)bitmapOrginal.Clone();
                     }
+                    Application.SetColorMode(SystemColorMode.System);
+                    if (Application.IsDarkModeEnabled)
+                    {
+
+                    }
                     Application.Run(new Form1((x) =>
                     {
                         new ContrastBrightnessSaturation(x, bitmap, bitmapOrginal,
